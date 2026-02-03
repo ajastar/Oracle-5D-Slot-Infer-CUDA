@@ -62,3 +62,30 @@ GPU (NVIDIA GeForce RTX 5060 Ti) の並列演算能力（4352 CUDA Cores）を�
 *   **Automation**: PowerShell / Batch
 
 
+
+<br>
+<br>
+
+# English Description (For Global Developers)
+
+## Overview
+**Island Profiler (Oracle 5D)** is a high-performance Monte Carlo simulator and real-time analyzer for the "Juggler" slot machine series, powered by **NVIDIA CUDA**.
+
+By leveraging the parallel computing power of the RTX 5060 Ti (4352 CUDA Cores), it generates **300 billion games (60 trillion trials)** of simulation data in advance.
+This system acts as a "Reverse Inference Engine," estimating not just the settings of a single machine but the **"State of the Entire Island" (5-Dimensional Profiling)** from sparse real-time data.
+
+### Key Features
+1.  **Extreme Performance**:
+    *   Optimized for **CUDA Compute Capability 8.9**.
+    *   Achieves massive throughput using purely integer-based logic and XOROSHIRO128+ RNG on GPU.
+2.  **5-Dimensional Profiling**:
+    *   Matches current hall data against a pre-calculated "Oracle Database" (~50GB).
+    *   Dimensions: [Best Machine Prob] [Reg Prob] [Top 3 Avg] [Worst Game Count] [Island total Game Count].
+3.  **Mobile Access**:
+    *   Host the server on a glowing gaming PC and access the dashboard via Smartphone in the parlor.
+
+## Tech Stack
+*   **Language**: C++20, CUDA C++, Python 3.10
+*   **Algorithm**: Bayesian Inference, Monte Carlo Simulation (Parallelized)
+*   **Hardware Target**: Single NVIDIA GPU (RTX 3060 or higher recommended)
+
