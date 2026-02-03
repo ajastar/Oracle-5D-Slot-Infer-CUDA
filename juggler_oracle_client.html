@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👁️ The Oracle 5D Client 👁️</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0d0d12;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 0.8em;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #1a1a24;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            color: #aaa;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            background: #252530;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00e5ff;
+            box-shadow: 0 0 5px rgba(0, 229, 255, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00e5ff, #0077ff);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Result Styles */
+        .result-box {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .confidence-meter {
+            margin: 20px 0;
+            background: #222;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #ffbb00, #00ff88);
+            width: 0%;
+            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: #000;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: #252530;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.7em;
+            color: #aaa;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 250px;
+            /* Increased from 150px to fit 200px bars */
+            padding-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .bar-col {
+            width: 12%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            /* Ensure alignment */
+            height: 100%;
+        }
+
+        .bar {
+            width: 100%;
+            background: #444;
+            transition: height 0.5s;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .bar.s6 {
+            background: #ff0055;
+            box-shadow: 0 0 10px #ff0055;
+        }
+
+        .bar.s5 {
+            background: #ff4488;
+        }
+
+        .bar.s4 {
+            background: #ffcc00;
+        }
+
+        .col-label {
+            margin-top: 5px;
+            font-size: 0.75em;
+            color: #aaa;
+        }
+
+        .col-val {
+            margin-bottom: 3px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        .step-hint {
+            font-size: 0.8em;
+            color: #00e5ff;
+            margin-left: 10px;
+            background: rgba(0, 229, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .copy-container {
+            margin-top: 25px;
+            text-align: left;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+        }
+
+        .copy-text {
+            width: 100%;
+            height: 120px;
+            background: #111;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            resize: vertical;
+            box-sizing: border-box;
+            font-size: 0.9em;
+        }
+
+        .copy-btn {
+            background: #222;
+            border: 1px solid #555;
+            color: #ccc;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
+            margin-top: 8px;
+            float: right;
+            font-size: 0.85em;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #444;
+            color: #fff;
+        }
+    </style>
+    <script>
+        function snapValue(input, step) {
+            let val = parseFloat(input.value);
+            if (!isNaN(val)) {
+                let snapped = Math.round(val / step) * step;
+                // Fix float precision issues (e.g. 120.0000001)
+                if (step % 1 !== 0) snapped = parseFloat(snapped.toFixed(1));
+
+                if (Math.abs(val - snapped) > 0.001) {
+                    // Visual feedback could be added here
+                    console.log(`Snapped ${val} to ${snapped}`);
+                }
+                input.value = snapped;
+            }
+        }
+
+        function copyToClipboard() {
+            const copyText = document.getElementById("copyArea");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const original = btn.textContent;
+                btn.textContent = "Copied! ✅";
+                setTimeout(() => btn.textContent = original, 2000);
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>👁️ The Oracle 5D</h1>
+        <div class="subtitle">AI-Powered Island Profiler (Level 12 Kernel)</div>
+
+        <div class="card">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>機種 (Machine Type)</label>
+                    <select id="machine">
+                        <option value="my">My Juggler V</option>
+                        <option value="gogo">GoGo Juggler 3</option>
+                        <option value="happy">Happy Juggler V3</option>
+                        <option value="funky">Funky Juggler 2</option>
+                        <option value="im">S Im Juggler EX</option>
+                        <option value="mr">Mr. Juggler</option>
+                        <option value="ultra">Ultra Miracle Juggler</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>K1: No.1 合算確率 (分母) <span class="step-hint">※2.0刻み</span></label>
+                    <input type="number" id="k1" step="2.0" placeholder="例: 120.0" onchange="snapValue(this, 2.0)">
+                </div>
+                <div class="form-group">
+                    <label>K2: No.1 REG確率 (分母) <span class="step-hint">※10.0刻み</span></label>
+                    <input type="number" id="k2" step="10.0" placeholder="例: 240.0" onchange="snapValue(this, 10.0)">
+                </div>
+                <div class="form-group">
+                    <label>K3: 上位3台の平均合算 <span class="step-hint">※2.0刻み</span></label>
+                    <input type="number" id="k3" step="2.0" placeholder="例: 130.0" onchange="snapValue(this, 2.0)">
+                </div>
+                <div class="form-group">
+                    <label>K4: ワースト台の回転数 <span class="step-hint">※250G刻み</span></label>
+                    <input type="number" id="k4" step="250" placeholder="例: 500" onchange="snapValue(this, 250)">
+                </div>
+                <div class="form-group full-width">
+                    <label>K5: 島の平均回転数 <span class="step-hint">※250G刻み</span></label>
+                    <input type="number" id="k5" step="250" placeholder="例: 4500" onchange="snapValue(this, 250)">
+                </div>
+            </div>
+            <button onclick="queryOracle()" style="margin-top:20px;">CONSULT THE ORACLE</button>
+        </div>
+
+        <div id="resultCard" class="card" style="display:none;">
+            <div class="result-box">
+                <label>S5/S6 信頼度 (High Setting Confidence)</label>
+                <div class="confidence-meter">
+                    <div id="confBar" class="confidence-fill">0%</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div id="avgSetting" class="stat-val">-</div>
+                        <div class="stat-label">平均設定 (Avg)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="totalSamples" class="stat-val">-</div>
+                        <div class="stat-label">参照サンプル数 (N)</div>
+                    </div>
+                </div>
+
+                <div class="bar-chart" id="chart">
+                    <!-- Bars injected by JS -->
+                </div>
+
+                <!-- Copy Area -->
+                <div class="copy-container">
+                    <label>📋 結果コピー (Result Copy)</label>
+                    <textarea id="copyArea" class="copy-text" readonly></textarea>
+                    <button class="copy-btn" onclick="copyToClipboard()">Copy Result</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function queryOracle() {
+            const data = {
+                machine: document.getElementById('machine').value,
+                k1: parseFloat(document.getElementById('k1').value),
+                k2: parseFloat(document.getElementById('k2').value),
+                k3: parseFloat(document.getElementById('k3').value),
+                k4: parseInt(document.getElementById('k4').value),
+                k5: parseInt(document.getElementById('k5').value)
+            };
+
+            if (isNaN(data.k1) || isNaN(data.k2) || isNaN(data.k3) || isNaN(data.k4) || isNaN(data.k5)) {
+                alert("全ての項目を正しく入力してください。");
+                return;
+            }
+
+            try {
+                // Determine API URL based on how the page is loaded
+                const baseUrl = window.location.protocol.startsWith('http') ? '' : 'http://127.0.0.1:5001';
+
+                const res = await fetch(baseUrl + '/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (!res.ok) throw new Error("Server Connection Failed");
+
+                const result = await res.json();
+
+                // Safety Check
+                if (result.count === 0 || result.high_confidence === undefined) {
+                    alert("該当するシミュレーションデータが見つかりませんでした。\\n入力値が範囲外か、データがまだ蓄積されていません。");
+                    return;
+                }
+
+                renderResult(result);
+
+            } catch (e) {
+                alert("サーバー接続エラー: " + e.message + "\\npython island_profiler/server_universal.py を起動してください。");
+            }
+        }
+
+        function renderResult(data) {
+            document.getElementById('resultCard').style.display = 'block';
+
+            // Confidence
+            const conf = data.high_confidence.toFixed(1);
+            const bar = document.getElementById('confBar');
+            bar.style.width = conf + "%";
+            bar.textContent = conf + "%";
+
+            // Stats
+            document.getElementById('avgSetting').textContent = data.avg_setting.toFixed(2);
+            document.getElementById('totalSamples').textContent = data.count.toLocaleString();
+
+            // Search Method Feedback
+            const subtitle = document.querySelector('.subtitle');
+            if (data.search_radius > 1) {
+                const rangeText = data.search_radius === 2 ? "Wide" : "Max";
+                subtitle.textContent = `⚠️ 精密データなし - 周辺データ(Radius ${data.search_radius}: ${rangeText})を表示中`;
+                subtitle.style.color = "#ffaa00";
+            } else {
+                subtitle.textContent = `✅ 精密データ (${data.bins_aggregated} bins aggregated)`;
+                subtitle.style.color = "#00ff88";
+            }
+
+            // Chart
+            const chart = document.getElementById('chart');
+            chart.innerHTML = '';
+
+            for (let s = 1; s <= 6; ++s) {
+                const prob = data.probs[s];
+                const height = Math.max(prob * 2, 2); // Scale factor
+                let cls = '';
+                if (s === 6) cls = 's6';
+                else if (s === 5) cls = 's5';
+                else if (s === 4) cls = 's4';
+
+                chart.innerHTML += `
+                <div class="bar-col">
+                    <div class="col-val">${prob.toFixed(1)}%</div>
+                    <div class="bar ${cls}" style="height:${height}px"></div>
+                    <div class="col-label">S${s}</div>
+                </div>
+                `;
+            }
+
+            // Populate Copy Text
+            const sel = document.getElementById('machine');
+            const machineName = sel.options[sel.selectedIndex].text;
+            const k1 = document.getElementById('k1').value;
+            const k2 = document.getElementById('k2').value;
+            const k3 = document.getElementById('k3').value;
+            const k4 = document.getElementById('k4').value;
+            const k5 = document.getElementById('k5').value;
+
+            let text = `【Oracle分析結果】\n`;
+            text += `機種: ${machineName}\n`;
+            text += `▼島状況(Input)\n`;
+            text += `・No.1合算: 1/${k1}\n`;
+            text += `・No.1REG : 1/${k2}\n`;
+            text += `・上位3台平均: 1/${k3}\n`;
+            text += `・ワースト回転: ${k4}G\n`;
+            text += `・島平均回転: ${k5}G\n`;
+            text += `------------------\n`;
+            text += `▼設定推測(Prob)\n`;
+            text += `S6: ${data.probs[6].toFixed(1).padStart(5)}%\n`;
+            text += `S5: ${data.probs[5].toFixed(1).padStart(5)}%\n`;
+            text += `S4: ${data.probs[4].toFixed(1).padStart(5)}%\n`;
+            text += `S3: ${data.probs[3].toFixed(1).padStart(5)}%\n`;
+            text += `S2: ${data.probs[2].toFixed(1).padStart(5)}%\n`;
+            text += `S1: ${data.probs[1].toFixed(1).padStart(5)}%\n`;
+            text += `------------------\n`;
+            text += `平均設定: ${data.avg_setting.toFixed(2)}\n`;
+            text += `S5-S6計 : ${data.high_confidence.toFixed(1)}%\n`;
+
+            if (data.search_radius > 1) {
+                text += `※周辺データ参照(Radius ${data.search_radius})`;
+            }
+
+            document.getElementById('copyArea').value = text;
+        }
+    </script>
+</body>
+
+</html>
