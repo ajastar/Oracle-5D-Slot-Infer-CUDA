@@ -61,5 +61,4 @@ GPU (NVIDIA GeForce RTX 5060 Ti) の並列演算能力（4352 CUDA Cores）を�
 *   **Frontend**: HTML5 / CSS3 (Dark/Neon Future UI) / Chart.js
 *   **Automation**: PowerShell / Batch
 
----
-*Created by Antigravity (Google DeepMind Team)*
+
